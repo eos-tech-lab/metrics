@@ -1,0 +1,41 @@
+version: '3.3'
+services:
+  influxdb:
+    image: influxdb:1.6.2
+    container_name: influxdb
+    network_mode: "host"
+    ports:
+      - "8083:8083"
+      - "8086:8086"
+      - "8090:8090"
+    env_file:
+      - 'env.influxdb'
+    volumes:
+      - /opt/docker/influxdb/data:/var/lib/influxdb
+
+  chronograf:
+    image: chronograf:1.6.2
+    container_name: chronograf
+    network_mode: "host"
+    ports:
+      - "8888:8888"
+    volumes:
+      - /opt/docker/chronograf/data:/var/lib/chronograf
+
+  telegraf:
+    image: telegraf:1.7.4
+    container_name: telegraf
+    network_mode: "host"
+    volumes:
+      - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
+
+  grafana:
+    image: grafana/grafana:5.2.4
+    container_name: grafana
+    network_mode: "host"
+    ports:
+      - "3000:3000"
+    env_file:
+      - 'env.grafana'
+    volumes:
+      - /opt/docker/grafana/data:/var/lib/grafana
